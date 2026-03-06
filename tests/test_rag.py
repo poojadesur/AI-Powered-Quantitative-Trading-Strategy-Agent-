@@ -47,9 +47,13 @@ class TestDocumentStore:
             "Maximum drawdown measures peak-to-trough decline.",
         ]
         store.add_documents(texts)
-        results = store.similarity_search("RSI overbought", k=1)
-        assert len(results) == 1
-        assert "RSI" in results[0].page_content
+        # FakeEmbeddings are random, so we only verify that k results are returned
+        results = store.similarity_search("RSI overbought", k=2)
+        assert len(results) == 2
+        # All returned content must come from the ingested texts
+        all_texts = set(texts)
+        for doc in results:
+            assert doc.page_content in all_texts
 
     def test_chunking_long_document(self):
         """Long documents should be split into multiple chunks."""

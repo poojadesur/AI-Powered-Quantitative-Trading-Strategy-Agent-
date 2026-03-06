@@ -24,9 +24,12 @@ def _generate_records(n: int = 300, seed: int = 42) -> list[dict[str, Any]]:
     Produces a simple trending price series so that indicator assertions
     are deterministic.
     """
+    from datetime import date, timedelta
+
     rng = random.Random(seed)
     price = 150.0
     records = []
+    start = date(2021, 1, 4)
     for i in range(n):
         change = rng.gauss(0.0003, 0.015)
         price = max(1.0, price * (1 + change))
@@ -37,7 +40,7 @@ def _generate_records(n: int = 300, seed: int = 42) -> list[dict[str, Any]]:
         volume = int(rng.uniform(1_000_000, 10_000_000))
         records.append(
             {
-                "date": f"202{i // 365 + 1}-{(i % 365 // 30) + 1:02d}-{(i % 30) + 1:02d}",
+                "date": (start + timedelta(days=i)).isoformat(),
                 "open": open_,
                 "high": high,
                 "low": low,

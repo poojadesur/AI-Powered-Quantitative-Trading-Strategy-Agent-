@@ -18,14 +18,17 @@ import pytest
 # ---------------------------------------------------------------------------
 
 def _make_records(n: int = 260) -> list[dict[str, Any]]:
+    from datetime import date, timedelta
+
     rng = random.Random(99)
     price = 200.0
     records = []
+    start = date(2023, 1, 3)
     for i in range(n):
         price = max(1.0, price * (1 + rng.gauss(0.0002, 0.013)))
         records.append(
             {
-                "date": f"2023-{(i % 365 // 30) + 1:02d}-{(i % 30) + 1:02d}",
+                "date": (start + timedelta(days=i)).isoformat(),
                 "open": round(price * 0.999, 4),
                 "high": round(price * 1.005, 4),
                 "low": round(price * 0.995, 4),
